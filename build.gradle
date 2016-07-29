@@ -66,8 +66,8 @@ project(':teamset-colcap-core') {
 	dependencies{
 		compile "org.springframework.security:spring-security-core:${depsVer.springSecurity}"
 		compile "org.springframework.security:spring-security-web:${depsVer.springSecurity}"
-	 	compile project(':teamset-domain')
-	 	compile project(':teamset-persistence')
+	 	compile project(':teamset-colcap-domain')
+	 	compile project(':teamset-colcap-persistence')
     }
 }
 
@@ -75,9 +75,9 @@ project(':teamset-colcap-core-imp') {
 	dependencies{
 		compile "org.springframework.security:spring-security-core:${depsVer.springSecurity}"
 		compile "org.springframework.security:spring-security-web:${depsVer.springSecurity}"
-		compile project(':teamset-core')
-	 	compile project(':teamset-domain')
-	 	compile project(':teamset-persistence')
+		compile project(':teamset-colcap-core')
+	 	compile project(':teamset-colcap-domain')
+	 	compile project(':teamset-colcap-persistence')
     }
 }
 
