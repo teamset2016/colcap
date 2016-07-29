@@ -2,11 +2,12 @@ package com.teamset.colcap.domain.entity.rule;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.teamset.colcap.domain.entity.collateral.property.Property;
 
 @Embeddable
 public class RuleCriteriaPk implements Serializable {
@@ -17,22 +18,23 @@ public class RuleCriteriaPk implements Serializable {
 	@JoinColumn(name = "RULE_ID")
 	private Rule rule;
 
-	@Column(name = "PROP_CODE")
-	private String propCode;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "PROP_FIELD")
+	private Property property;
 
-	public String getPropCode() {
-		return propCode;
+	public Property getProperty() {
+		return property;
 	}
 
-	public void setPropCode(String propCode) {
-		this.propCode = propCode;
+	public void setProperty(Property property) {
+		this.property = property;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((propCode == null) ? 0 : propCode.hashCode());
+		result = prime * result + ((property == null) ? 0 : property.hashCode());
 		result = prime * result + ((rule == null) ? 0 : rule.hashCode());
 		return result;
 	}
@@ -46,10 +48,10 @@ public class RuleCriteriaPk implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		RuleCriteriaPk other = (RuleCriteriaPk) obj;
-		if (propCode == null) {
-			if (other.propCode != null)
+		if (property == null) {
+			if (other.property != null)
 				return false;
-		} else if (!propCode.equals(other.propCode))
+		} else if (!property.equals(other.property))
 			return false;
 		if (rule == null) {
 			if (other.rule != null)

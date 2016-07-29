@@ -1,4 +1,4 @@
-package com.teamset.colcap.constant.currency;
+package com.teamset.colcap.domain.dao.constant.currency;
 
 public final class CurrencyConstant {
 
