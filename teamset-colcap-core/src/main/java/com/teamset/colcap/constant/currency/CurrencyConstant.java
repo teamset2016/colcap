@@ -1,6 +1,6 @@
 package com.teamset.colcap.constant.currency;
 
-public class CurrencyConstant {
+public final class CurrencyConstant {
 
 	public static final String SGD = "SGD";
 

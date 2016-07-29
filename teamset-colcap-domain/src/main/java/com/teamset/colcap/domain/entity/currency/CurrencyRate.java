@@ -1,5 +1,6 @@
 package com.teamset.colcap.domain.entity.currency;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -10,10 +11,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "CURRENCY_RATE")
-public class CurrencyRate {
+public class CurrencyRate implements Serializable {
+
+	private static final long serialVersionUID = 783206070356792537L;
 
 	@EmbeddedId
-	private CurrencyRatePk currencyRatePk;
+	private CurrencyRatePk pk;
 
 	@Column(name = "RATE_DT")
 	private Date rateDt;
@@ -24,12 +27,12 @@ public class CurrencyRate {
 	@Column(name = "CURR_UNIT")
 	private Integer currUnit;
 
-	public CurrencyRatePk getCurrencyRatePk() {
-		return currencyRatePk;
+	public CurrencyRatePk getPk() {
+		return pk;
 	}
 
-	public void setCurrencyRatePk(CurrencyRatePk currencyRatePk) {
-		this.currencyRatePk = currencyRatePk;
+	public void setPk(CurrencyRatePk pk) {
+		this.pk = pk;
 	}
 
 	public Date getRateDt() {
@@ -60,7 +63,7 @@ public class CurrencyRate {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((currencyRatePk == null) ? 0 : currencyRatePk.hashCode());
+		result = prime * result + ((pk == null) ? 0 : pk.hashCode());
 		return result;
 	}
 
@@ -73,10 +76,10 @@ public class CurrencyRate {
 		if (getClass() != obj.getClass())
 			return false;
 		CurrencyRate other = (CurrencyRate) obj;
-		if (currencyRatePk == null) {
-			if (other.currencyRatePk != null)
+		if (pk == null) {
+			if (other.pk != null)
 				return false;
-		} else if (!currencyRatePk.equals(other.currencyRatePk))
+		} else if (!pk.equals(other.pk))
 			return false;
 		return true;
 	}
