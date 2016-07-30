@@ -25,11 +25,14 @@ public class Collateral implements Serializable {
 	@Column(name = "COLL_TYPE")
 	private String collType;
 
-	@Column(name = "COLL_Name")
+	@Column(name = "COLL_NAME")
 	private String collName;
 
 	@Column(name = "COLL_VAL")
 	private BigDecimal collVal;
+
+	@Column(name = "COLL_AGE")
+	private Integer collAge;
 
 	@Column(name = "COLL_VAL_CURR_CODE")
 	private String collValCurrCode;
@@ -45,6 +48,18 @@ public class Collateral implements Serializable {
 
 	@Column(name = "UPDATE_BY")
 	private String updateBy;
+
+	@Column(name = "CTR_PARTY_AGE")
+	private Integer ctrPartyAge;
+
+	@Column(name = "CTR_PARTY_RATING")
+	private Integer ctrPartyRating;
+
+	@Column(name = "EXP_SECURED")
+	private BigDecimal expSecured;
+
+	@Column(name = "COLL_RATING")
+	private String collRating;
 
 	public Long getCollId() {
 		return collId;
@@ -86,6 +101,14 @@ public class Collateral implements Serializable {
 		this.collVal = collVal;
 	}
 
+	public Integer getCollAge() {
+		return collAge;
+	}
+
+	public void setCollAge(Integer collAge) {
+		this.collAge = collAge;
+	}
+
 	public String getCollValCurrCode() {
 		return collValCurrCode;
 	}
@@ -124,6 +147,38 @@ public class Collateral implements Serializable {
 
 	public void setUpdateBy(String updateBy) {
 		this.updateBy = updateBy;
+	}
+
+	public Integer getCtrPartyAge() {
+		return ctrPartyAge;
+	}
+
+	public void setCtrPartyAge(Integer ctrPartyAge) {
+		this.ctrPartyAge = ctrPartyAge;
+	}
+
+	public Integer getCtrPartyRating() {
+		return ctrPartyRating;
+	}
+
+	public void setCtrPartyRating(Integer ctrPartyRating) {
+		this.ctrPartyRating = ctrPartyRating;
+	}
+
+	public BigDecimal getExpSecured() {
+		return expSecured;
+	}
+
+	public void setExpSecured(BigDecimal expSecured) {
+		this.expSecured = expSecured;
+	}
+
+	public String getCollRating() {
+		return collRating;
+	}
+
+	public void setCollRating(String collRating) {
+		this.collRating = collRating;
 	}
 
 	@Override
