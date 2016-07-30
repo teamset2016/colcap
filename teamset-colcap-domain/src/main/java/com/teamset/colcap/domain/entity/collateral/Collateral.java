@@ -31,11 +31,11 @@ public class Collateral implements Serializable {
 	@Column(name = "COLL_VAL")
 	private BigDecimal collVal;
 
-	@Column(name = "COLL_AGE")
-	private Integer collAge;
-
 	@Column(name = "COLL_VAL_CURR_CODE")
 	private String collValCurrCode;
+
+	@Column(name = "COLL_AGE")
+	private Integer collAge;
 
 	@Column(name = "CREATE_DT")
 	private Date createDt;
@@ -101,20 +101,20 @@ public class Collateral implements Serializable {
 		this.collVal = collVal;
 	}
 
-	public Integer getCollAge() {
-		return collAge;
-	}
-
-	public void setCollAge(Integer collAge) {
-		this.collAge = collAge;
-	}
-
 	public String getCollValCurrCode() {
 		return collValCurrCode;
 	}
 
 	public void setCollValCurrCode(String collValCurrCode) {
 		this.collValCurrCode = collValCurrCode;
+	}
+
+	public Integer getCollAge() {
+		return collAge;
+	}
+
+	public void setCollAge(Integer collAge) {
+		this.collAge = collAge;
 	}
 
 	public Date getCreateDt() {

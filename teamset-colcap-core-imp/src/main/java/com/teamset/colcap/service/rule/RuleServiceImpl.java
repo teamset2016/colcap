@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.teamset.colcap.domain.dao.rule.MasterRuleDao;
+import com.teamset.colcap.domain.dao.rule.RuleCriteriaDao;
 import com.teamset.colcap.domain.dao.rule.RuleDao;
 import com.teamset.colcap.domain.entity.rule.MasterRule;
 import com.teamset.colcap.domain.entity.rule.Rule;
+import com.teamset.colcap.domain.entity.rule.RuleCriteria;
 
 @Service
 public class RuleServiceImpl implements RuleService {
@@ -20,6 +22,9 @@ public class RuleServiceImpl implements RuleService {
 
 	@Inject
 	private MasterRuleDao masterRuleDao;
+
+	@Inject
+	private RuleCriteriaDao ruleCriteriaDao;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -37,6 +42,12 @@ public class RuleServiceImpl implements RuleService {
 	@Transactional(readOnly = true)
 	public List<MasterRule> findMasterRule(Long acctId) {
 		return masterRuleDao.findMasterRule(acctId);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<RuleCriteria> findRuleCriteria(Long ruleId) {
+		return ruleCriteriaDao.findRuleCriteria(ruleId);
 	}
 
 }
