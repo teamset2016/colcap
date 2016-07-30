@@ -45,6 +45,12 @@ public class CollateralServiceImpl implements CollateralService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet) {
+		return findColleteral(acctId, collIdSet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public Set<CollateralHaircut> findColleteralHaircut(List<MasterRule> masterRuleList, Long collId) {
 		Set<CollateralHaircut> collHaircutSet = new HashSet<>();
 		Map<String, Property> propertyMap = getPropertyMap();
@@ -112,4 +118,5 @@ public class CollateralServiceImpl implements CollateralService {
 
 		return propertyMap;
 	}
+
 }

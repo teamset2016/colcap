@@ -12,6 +12,8 @@ import com.teamset.colcap.domain.entity.rule.RuleCriteria;
 
 public interface CollateralDao extends GenericDao<Collateral, Long> {
 
+	List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet);
+
 	List<Collateral> findEligibleColleteral(Rule eligibilityRule, Map<String, Property> propertyMap);
 
 	List<Collateral> findColleteralForHaircut(Rule haircutRule, Set<Long> collIdSet, Map<String, Property> propertyMap);
