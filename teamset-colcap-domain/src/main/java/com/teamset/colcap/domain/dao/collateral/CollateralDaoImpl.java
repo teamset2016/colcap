@@ -8,7 +8,9 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.teamset.colcap.domain.dao.GenericDaoImpl;
@@ -23,8 +25,22 @@ import com.teamset.colcap.domain.entity.rule.RuleCriteria;
 @Repository
 public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implements CollateralDao {
 
+	private final static String COLL_ID = "collId";
+
+	private final static String ACCT_ID = "acctId";
+
 	@Inject
 	private RuleCriteriaDao ruleCriteriaDao;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet) {
+		Criteria criteria = getSession().createCriteria(Collateral.class);
+		criteria.add(Restrictions.eq(ACCT_ID, acctId));
+		criteria.add(Restrictions.not(Restrictions.in(COLL_ID, collIdSet)));
+
+		return criteria.list();
+	}
 
 	@Override
 	public List<Collateral> findEligibleColleteral(Rule eligibilityRule, Map<String, Property> propertyMap) {

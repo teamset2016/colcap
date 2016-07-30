@@ -25,6 +25,9 @@ public class Collateral implements Serializable {
 	@Column(name = "COLL_TYPE")
 	private String collType;
 
+	@Column(name = "COLL_SUB_TYPE")
+	private String collSubType;
+
 	@Column(name = "COLL_NAME")
 	private String collName;
 
@@ -86,6 +89,14 @@ public class Collateral implements Serializable {
 
 	public void setCollType(String collType) {
 		this.collType = collType;
+	}
+
+	public String getCollSubType() {
+		return collSubType;
+	}
+
+	public void setCollSubType(String collSubType) {
+		this.collSubType = collSubType;
 	}
 
 	public String getCollName() {
