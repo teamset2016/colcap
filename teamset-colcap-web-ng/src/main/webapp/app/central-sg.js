@@ -8,7 +8,7 @@
  * 
  * Main module of the application.
  */
-angular.module('colcap',  [ "ui.select",
+angular.module('colcap',  [ "ui.select",'colcap.sweetAlert',
 	            			"datatables",
 	            			,'colcap.router','colcap.icheck','colcap.pageTitle','colcap.sweetAlert','colcap.ruleService']);
 })();

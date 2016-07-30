@@ -16,8 +16,10 @@
     <script src="/webjars/angular-datatables/0.5.0/dist/angular-datatables.min.js"></script> 
     <script src="/webjars/angular-breadcrumb/0.4.0/dist/angular-breadcrumb.min.js"></script> 
     <script src="/webjars/bootstrap/4.0.0-alpha.3/dist/js/bootstrap.min.js"></script> 
-
-    <script src="/webjars/angular-treasure-overlay-spinner/1.1.0/dist/treasure-overlay-spinner.min.js"></script> 
+        <script src="/webjars/bootstrap/4.0.0-alpha.3/dist/js/bootstrap.min.js"></script> 
+            <script src="/webjars/sweetalert/0.4.1/sweet-alert.min.js"></script> 
+    
+    <script src="/webjars/angular-treasure-overlay-spinner/1.1.0/src/treasure-overlay-spinner.js"></script> 
         
     <script src="/scripts/@jsfile@"></script>
     

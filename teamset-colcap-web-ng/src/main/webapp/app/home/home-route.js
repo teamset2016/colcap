@@ -41,6 +41,8 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
     		templateUrl : "/app/rule/rule.html",
     		 data: {
                  pageTitle: "Rule Maintenance"
+             } ,ncyBreadcrumb: {
+                 label: "Rule Maintenance"
              }
         });
 };

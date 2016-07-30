@@ -184,11 +184,30 @@ function sparkline() {
 
              })
          };
-         ret.deleteRule = function(rule) {
+         ret.deleteRule = function(ruleId) {
              return $http({
                  method: "POST",
                  url:  "rule/delete-rule",
-                data : rule
+                params : {
+                	ruleId :ruleId
+                }
+             })
+         };
+         ret.findRules = function(rule) {
+             return $http({
+                 method: "POST",
+                 url:  "rule/find-rules",
+                  data : rule
+             })
+         };
+         
+         ret.getRuleDetails = function(masterRuleId) {
+             return $http({
+                 method: "POST",
+                 url:  "rule/get-rule-details",
+                 params : {
+                	 masterRuleId : masterRuleId
+                 }
              })
          };
          return ret;
@@ -205,7 +224,7 @@ function sparkline() {
  * 
  * Main module of the application.
  */
-angular.module('colcap',  [ "ui.select",
+angular.module('colcap',  [ "ui.select",'colcap.sweetAlert',
 	            			"datatables",
 	            			,'colcap.router','colcap.icheck','colcap.pageTitle','colcap.sweetAlert','colcap.ruleService']);
 })();
@@ -280,6 +299,8 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
     		templateUrl : "/app/rule/rule.html",
     		 data: {
                  pageTitle: "Rule Maintenance"
+             } ,ncyBreadcrumb: {
+                 label: "Rule Maintenance"
              }
         });
 };
@@ -288,9 +309,9 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
 (function() {
 	'use strict';
 	angular.module("colcap")
-	.controller("RuleCtrl", ['$scope','$http','ruleService','$uibModal',ruleCtrl])
+	.controller("RuleCtrl", ['$scope','$http','ruleService','$uibModal','sweetAlert',ruleCtrl])
 	
-	function ruleCtrl($scope,$http,ruleService,$uibModal){
+	function ruleCtrl($scope,$http,ruleService,$uibModal,sweetAlert){
 		var ctrl = this;
 		ctrl.isLoading = false;
 
@@ -298,8 +319,9 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
 			ctrl.isLoading = true;
 			ruleService.init().then(function(result) {
 				ctrl.criterias = result.data.criterias;
-				console.log(ctrl.criterias)
 				ctrl.operators = result.data.operators;
+				ctrl.masterRules = result.data.masterRules;
+				ctrl.collTypes = result.data.collTypes;
 			}).finally(function(){
 				ctrl.isLoading = false;
 			})
@@ -319,14 +341,16 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
 	                        return ctrl.operators
 	                    },rule: function(){
 	                    	return rule;
+	                    },collTypes : function(){
+	                    	return ctrl.collTypes
 	                    },mode: function(){
 	                    	return "EDIT";
 	                    }
 	                }
 	            })
 		}
-		ctrl.openChartDialog = function() {
-            $uibModal.open({
+		 ctrl.openChartDialog = function() {
+			 var modalInstance = $uibModal.open({
                 templateUrl: "app/rule/rule-modal.html",
                 size: "lg",
                 controller: "RuleModalInstanceCtrl",
@@ -339,16 +363,23 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
                         return ctrl.operators
                     },rule: function(){
                     	return undefined
+                    },collTypes : function(){
+                    	return ctrl.collTypes
                     },mode: function(){
                     	return "ADD";
                     }
                 }
             })
+            modalInstance.result.then(function(data) {
+        		ctrl.init();
+            })
         }
-		ctrl.deleteRule = function(rule) {
-			ruleService.deleteRule(rule).then(function(result) {
+		ctrl.deleteRule = function(ruleId) {
+			ruleService.deleteRule(ruleId).then(function(result) {	
+        		ctrl.init();
+        		sweetAlert.success("Rule Sucessfully Deleted!","Deleted");
 			}).finally(function(){
-			});
+		});
         }
 	}
 	
@@ -357,22 +388,28 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
 (function() {
 	'use strict';
 	angular.module("colcap")
-	.controller("RuleModalInstanceCtrl", ['$scope','$http','ruleService','$uibModal','criterias','operators','rule','mode',ruleModalCtrl])
+	.controller("RuleModalInstanceCtrl", ['$scope','$http','ruleService','$uibModal','criterias','operators','rule','collTypes','mode','sweetAlert','$uibModalInstance',ruleModalCtrl])
 	
-	function ruleModalCtrl($scope,$http,ruleService,$uibModal,criterias,operators,rule,mode){
+	function ruleModalCtrl($scope,$http,ruleService,$uibModal,criterias,operators,rule,collTypes,mode,sweetAlert,$uibModalInstance){
 		var ctrl = this;
 		ctrl.isLoading = false;
 		ctrl.operators = operators;
 		ctrl.criterias = criterias;
-		ctrl.rule = operators;
+		ctrl.collTypes = collTypes;
 
 		if("EDIT" == mode){
+			ruleService.getRuleDetails(rule.masterRuleId).then(function(result){
+				ctrl.rule = result.data.result;
+
+			}).finally(function(){
+				
+			})
 			ctrl.rule = rule;
 			
 		}else{
 			ctrl.rule = {
 					ruleCriterias : [],
-					hairCutRuleCriterias : []
+					hairCutRuleSets : []
 			};
 		}
 	
@@ -384,36 +421,48 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
 			ctrl.rule.ruleCriterias.splice(index,1);
 		}
 		
-		ctrl.addHairCutCriteria = function(){
-			ctrl.rule.hairCutRuleCriterias.push({operator : 'EQ'});
+		ctrl.addHairCutRulesSet = function(){
+			ctrl.rule.hairCutRuleSets.push({
+				ruleCriterias: []}
+			);
 		}
 		
-		ctrl.removeHairCutCriteria = function(index){
-			ctrl.rule.hairCutRuleCriterias.splice(index,1);
+		ctrl.addHairCutRulesCriteria = function(setIndex){
+			console.log('setIndex==>' + setIndex);
+			console.log(ctrl.rule.hairCutRuleSets[setIndex].ruleCriterias);
+			ctrl.rule.hairCutRuleSets[setIndex].ruleCriterias.push({operator : 'EQ'});
 		}
-		ctrl.getOperator = function(fld){
-			if(fld != 'NUM'){
-				var operators = [];
-				angular.forEach(ctrl.operators,function(val,fld){
-					if(val.code != 'BT'){
-						operators.push(val);	
-					}
-				});
-				return operators;
-			}
-			return ctrl.operators;
+		
+		ctrl.deleteHairCutRulesSet= function(index){
+			ctrl.rule.hairCutRuleSets.splice(index,1);
 		}
-		ctrl.getFieldTypeByPropertyField = function(propertyType){
+
+		ctrl.deleteHairCutRulesCriteria = function(setIndex,index){
+			ctrl.rule.hairCutRuleSets[setIndex].ruleCriterias.splice(index,1);
+		}
+		
+		ctrl.checkIfAnyBlankCriteriaHairCutSet = function(){
+			angular.forEach(ctrl.rule.hairCutRuleSets,function(val,key){
+				if(val.ruleCriterias.length <=0){
+					return true;
+				}
+			});
+			return false;
+		}
+		
+				ctrl.getFieldTypeByPropertyField = function(propertyType){
 			return $filter("filter")(ctrl.criterias, {
                 propertyFld: propertyType
             }, function(actual, expected) {
                 return angular.equals(actual, expected)
             })[0].propType;
 		}
-		
+		ctrl.close = function(){
+			$uibModalInstance.close('dismiss');
+		}
+
 		ctrl.submit = function(){
 			ctrl.isLoading = true;
-
 			if(mode == "EDIT"){
 				ruleService.updateRule(ctrl.rule).then(function(){
 					
@@ -423,14 +472,18 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
 				
 			}else{
 				ruleService.addRule(ctrl.rule).then(function(){
-					
+					swal({ 
+						  title: "Success",
+						   text: "Rule Successfully Created!",
+						    type: "success" 
+						  },
+						  function(){
+							  $uibModalInstance.close('success');
+						});
 				}).finally(function(){
 					ctrl.isLoading = false;
 				})
-				
-				
 			}
-		
 		}
 	}
 	

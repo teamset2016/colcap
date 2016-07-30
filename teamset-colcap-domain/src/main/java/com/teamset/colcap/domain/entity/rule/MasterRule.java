@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,6 +16,7 @@ public class MasterRule implements Serializable {
 	private static final long serialVersionUID = -1037770663595666107L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "MASTER_RULE_ID")
 	private Long masterRuleId;
 
@@ -25,6 +28,9 @@ public class MasterRule implements Serializable {
 
 	@Column(name = "COLL_TYPE")
 	private String collType;
+
+	@Column(name = "TIER")
+	private String tier;
 
 	public Long getMasterRuleId() {
 		return masterRuleId;
@@ -58,11 +64,20 @@ public class MasterRule implements Serializable {
 		this.collType = collType;
 	}
 
+	public String getTier() {
+		return tier;
+	}
+
+	public void setTier(String tier) {
+		this.tier = tier;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((masterRuleId == null) ? 0 : masterRuleId.hashCode());
+		result = prime * result
+				+ ((masterRuleId == null) ? 0 : masterRuleId.hashCode());
 		return result;
 	}
 

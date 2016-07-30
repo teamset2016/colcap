@@ -1,21 +1,23 @@
 
 <div class="card card-primary card-border" ng-controller="RuleCtrl as ruleCtrl">
-  <treasure-overlay-spinner active="ruleCtrl.isLoading">
-
+  <treasure-overlay-spinner active="true">
 <div class="card-header ">Rules
 	<div class="pull-right">
 		<button class="btn-sm btn btn-primary" ng-click="ruleCtrl.openChartDialog()"> Add Rule</button>
 	</div>
 </div>
 <div class="card-block">
-	<table datatable="" class="table table-hover table-condensed table-striped">
+	<table datatable="" class="table table-hover table-condensed table-striped" ng-if="ruleCtrl.masterRules">
 		<thead>
 			<tr>
 				<th>
-				Rule Id
+				Rule Description
 				</th>
 				<th>
-				Rule Description
+				For Collateral
+				</th>
+				<th>
+				Tier
 				</th>
 				<th>
 				Action
@@ -23,16 +25,19 @@
 			</tr>
 		</thead>
 		<tbody>
-		<tr ng-repeat="rule in ruleCtrl.ruleList">
+		<tr ng-repeat="rule in ruleCtrl.masterRules">
 			<td>
-				<span ng-bind="rule.ruleId"> </span>
+				<span ng-bind="rule.ruleName"> </span>
 			</td>
 			<td>
-				<span ng-bind="rule.desc"> </span>
+				<span ng-bind="rule.collType"> </span>
 			</td>
 			<td>
-				<button class="btn btn-info" ng-click="ruleCtrl.editRule(rule)">Edit</button>
-				<button class="btn btn-danger" ng-click="ruleCtrl.deleteRule()">Remove</button>
+				<span ng-bind="rule.tier"> </span>
+			</td>
+			
+			<td>
+				<button class="btn btn-danger" ng-click="ruleCtrl.deleteRule(rule.masterRuleId)">Remove</button>
 			</td>
 		</tr>
 		</tbody>
