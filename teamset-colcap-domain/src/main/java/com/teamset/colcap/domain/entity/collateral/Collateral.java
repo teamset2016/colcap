@@ -58,6 +58,9 @@ public class Collateral implements Serializable {
 	@Column(name = "EXP_SECURED")
 	private BigDecimal expSecured;
 
+	@Column(name = "EXP_CURR_CODE")
+	private String expCurrCode;
+
 	@Column(name = "COLL_RATING")
 	private String collRating;
 
@@ -171,6 +174,14 @@ public class Collateral implements Serializable {
 
 	public void setExpSecured(BigDecimal expSecured) {
 		this.expSecured = expSecured;
+	}
+
+	public String getExpCurrCode() {
+		return expCurrCode;
+	}
+
+	public void setExpCurrCode(String expCurrCode) {
+		this.expCurrCode = expCurrCode;
 	}
 
 	public String getCollRating() {
