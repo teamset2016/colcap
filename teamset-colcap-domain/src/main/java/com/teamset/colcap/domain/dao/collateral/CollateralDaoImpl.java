@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.teamset.colcap.domain.dao.GenericDaoImpl;
 import com.teamset.colcap.domain.dao.constant.property.PropertyConstant;
 import com.teamset.colcap.domain.dao.constant.rule.RuleConstant;
+import com.teamset.colcap.domain.dao.rule.RuleCriteriaDao;
 import com.teamset.colcap.domain.entity.collateral.Collateral;
 import com.teamset.colcap.domain.entity.collateral.property.Property;
 import com.teamset.colcap.domain.entity.rule.Rule;
@@ -20,71 +23,84 @@ import com.teamset.colcap.domain.entity.rule.RuleCriteria;
 @Repository
 public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implements CollateralDao {
 
+	@Inject
+	private RuleCriteriaDao ruleCriteriaDao;
+
+	@Override
+	public List<Collateral> findEligibleColleteral(Rule eligibilityRule, Map<String, Property> propertyMap) {
+		return findColleteral(ruleCriteriaDao.findRuleCriteria(eligibilityRule.getRuleId()), null, propertyMap);
+	}
+
+	public List<Collateral> findColleteralForHaircut(Rule haircutRule, Set<Long> collIdSet, Map<String, Property> propertyMap) {
+		return findColleteral(ruleCriteriaDao.findRuleCriteria(haircutRule.getRuleId()), collIdSet, propertyMap);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Collateral> findEligibleColleteral(List<Rule> ruleList, Long collId) {
+	public List<Collateral> findColleteral(List<RuleCriteria> ruleCriteriaList, Set<Long> collIdSet, Map<String, Property> propertyMap) {
 		boolean isFirstRule = true;
 		int criteriaIndex = 0;
 		Map<String, Object> paramMap = new HashMap<>();
 		StringBuilder querySb = new StringBuilder("from colleteral where");
 
-		if (collId != null) {
-			querySb.append(" collId = :collId");
-			paramMap.put("collId", collId);
+		if (CollectionUtils.isNotEmpty(ruleCriteriaList)) {
+			querySb.append("\n");
+
+			if (!isFirstRule) {
+				querySb.append("or ");
+			} else {
+				isFirstRule = false;
+			}
+
+			querySb.append("(");
+			querySb.append("\n");
+			boolean isFirstCriteria = true;
+
+			for (RuleCriteria ruleCriteria : ruleCriteriaList) {
+				if (!isFirstCriteria) {
+					querySb.append("and ");
+				} else {
+					isFirstCriteria = false;
+				}
+
+				String operator = ruleCriteria.getOperator();
+				String propField = ruleCriteria.getPk().getPropField();
+				String propType = propertyMap.get(propField).getPropType();
+				String paramKey = String.format("cri%dVal1", criteriaIndex);
+				paramMap.put(paramKey, ruleCriteria.getVal1());
+
+				if (RuleConstant.OPR_EQ.equals(operator) || RuleConstant.OPR_NE.equals(operator) || RuleConstant.OPR_GT.equals(operator) || RuleConstant.OPR_GE.equals(operator)
+						|| RuleConstant.OPR_LT.equals(operator) || RuleConstant.OPR_LE.equals(operator)) {
+					querySb.append(getCriteriaStr(operator, propField, propType, paramKey));
+				} else {
+					querySb.append(getCriteriaStr(RuleConstant.OPR_GE, propField, propType, paramKey));
+
+					String paramKey2 = String.format("cri%dVal2", criteriaIndex);
+					paramMap.put(paramKey2, ruleCriteria.getVal2());
+
+					querySb.append("and ");
+					querySb.append(getCriteriaStr(RuleConstant.OPR_LE, propField, propType, paramKey));
+				}
+
+				criteriaIndex++;
+			}
+			querySb.append("\n");
+			querySb.append(")");
 		}
 
-		for (Rule rule : ruleList) {
-			Set<RuleCriteria> ruleCriteriaSet = rule.getRuleCriteriaSet();
-
-			if (CollectionUtils.isNotEmpty(ruleCriteriaSet)) {
-				querySb.append("\n");
-
-				if (!isFirstRule) {
-					querySb.append("or ");
-				} else {
-					isFirstRule = false;
-				}
-
-				querySb.append("(\n");
-				boolean isFirstCriteria = true;
-
-				for (RuleCriteria ruleCriteria : ruleCriteriaSet) {
-					if (!isFirstCriteria) {
-						querySb.append("and ");
-					} else {
-						isFirstCriteria = false;
-					}
-
-					String operator = ruleCriteria.getOperator();
-					Property property = ruleCriteria.getPk().getProperty();
-					String propField = property.getPropField();
-					String propType = property.getPropType();
-					String paramKey = String.format("cri%dVal1", criteriaIndex);
-					paramMap.put(paramKey, ruleCriteria.getVal1());
-
-					if (RuleConstant.OPR_EQ.equals(operator) || RuleConstant.OPR_NE.equals(operator) || RuleConstant.OPR_GT.equals(operator) || RuleConstant.OPR_GE.equals(operator)
-							|| RuleConstant.OPR_LT.equals(operator) || RuleConstant.OPR_LE.equals(operator)) {
-						querySb.append(getCriteriaStr(operator, propField, propType, paramKey));
-					} else {
-						querySb.append(getCriteriaStr(RuleConstant.OPR_GE, propField, propType, paramKey));
-
-						String paramKey2 = String.format("cri%dVal2", criteriaIndex);
-						paramMap.put(paramKey2, ruleCriteria.getVal2());
-
-						querySb.append("and ");
-						querySb.append(getCriteriaStr(RuleConstant.OPR_LE, propField, propType, paramKey));
-					}
-
-					criteriaIndex++;
-				}
-				querySb.append("\n)");
-			}
+		if (collIdSet != null) {
+			querySb.append("\n");
+			querySb.append("and collId in (:collIdSet)");
 		}
 
 		Query query = getSession().createQuery(querySb.toString());
 
 		for (String paramKey : paramMap.keySet()) {
 			query.setParameter(paramKey, paramMap.get(paramKey));
+		}
+
+		if (collIdSet != null) {
+			query.setParameterList("collIdSet", collIdSet);
 		}
 
 		return query.list();
@@ -138,78 +154,81 @@ public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implemen
 		return null;
 	}
 
-	// private static List<Rule> getTestRuleList() {
-	// List<Rule> ruleList = new ArrayList<>();
+	// private static Set<Rule> getTestRuleList() {
+	// Set<Rule> ruleSet = new HashSet<>();
 	// Rule rule1 = new Rule();
-	// ruleList.add(rule1);
+	// rule1.setRuleId(1L);
+	// ruleSet.add(rule1);
 	// Set<RuleCriteria> rule1CriteriaSet = new HashSet<>();
 	// rule1.setRuleCriteriaSet(rule1CriteriaSet);
 	//
 	// RuleCriteria rule1Criteria1 = new RuleCriteria();
+	// rule1Criteria1.setRuleCriteriaId(1L);
 	// rule1CriteriaSet.add(rule1Criteria1);
-	// RuleCriteriaPk rule1Criteria1Pk = new RuleCriteriaPk();
-	// rule1Criteria1.setPk(rule1Criteria1Pk);
-	// Property rule1Criteria1PkProp = new Property();
-	// rule1Criteria1Pk.setProperty(rule1Criteria1PkProp);
-	// rule1Criteria1PkProp.setPropField("age");
-	// rule1Criteria1PkProp.setPropType(PropertyConstant.TYPE_STR);
+	// rule1Criteria1.setPropField("type");
 	// rule1Criteria1.setOperator(RuleConstant.OPR_EQ);
 	// rule1Criteria1.setVal1("10");
 	// rule1Criteria1.setVal2("20");
 	//
 	// RuleCriteria rule1Criteria2 = new RuleCriteria();
+	// rule1Criteria2.setRuleCriteriaId(2L);
 	// rule1CriteriaSet.add(rule1Criteria2);
-	// RuleCriteriaPk rule1Criteria2Pk = new RuleCriteriaPk();
-	// rule1Criteria2.setPk(rule1Criteria2Pk);
-	// Property rule1Criteria2PkProp = new Property();
-	// rule1Criteria2Pk.setProperty(rule1Criteria2PkProp);
-	// rule1Criteria2PkProp.setPropField("age");
-	// rule1Criteria2PkProp.setPropType(PropertyConstant.TYPE_NUM);
+	// rule1Criteria2.setPropField("age");
 	// rule1Criteria2.setOperator(RuleConstant.OPR_EQ);
 	// rule1Criteria2.setVal1("10");
 	// rule1Criteria2.setVal2("20");
 	//
 	// Rule rule2 = new Rule();
-	// ruleList.add(rule2);
+	// rule2.setRuleId(2L);
+	// ruleSet.add(rule2);
 	// Set<RuleCriteria> rule2CriteriaSet = new HashSet<>();
 	// rule2.setRuleCriteriaSet(rule2CriteriaSet);
 	//
 	// RuleCriteria rule2Criteria1 = new RuleCriteria();
+	// rule2Criteria1.setRuleCriteriaId(3L);
 	// rule2CriteriaSet.add(rule2Criteria1);
-	// RuleCriteriaPk rule2Criteria1Pk = new RuleCriteriaPk();
-	// rule2Criteria1.setPk(rule2Criteria1Pk);
-	// Property rule2Criteria1PkProp = new Property();
-	// rule2Criteria1Pk.setProperty(rule2Criteria1PkProp);
-	// rule2Criteria1PkProp.setPropField("type");
-	// rule2Criteria1PkProp.setPropType(PropertyConstant.TYPE_NUM);
+	// rule1Criteria2.setPropField("age");
 	// rule2Criteria1.setOperator(RuleConstant.OPR_BT);
 	// rule2Criteria1.setVal1("10");
 	// rule2Criteria1.setVal2("20");
 	//
 	// RuleCriteria rule2Criteria2 = new RuleCriteria();
+	// rule2Criteria2.setRuleCriteriaId(4L);
 	// rule2CriteriaSet.add(rule2Criteria2);
-	// RuleCriteriaPk rule2Criteria2Pk = new RuleCriteriaPk();
-	// rule2Criteria2.setPk(rule2Criteria2Pk);
-	// Property rule2Criteria2PkProp = new Property();
-	// rule2Criteria2Pk.setProperty(rule2Criteria2PkProp);
-	// rule2Criteria2PkProp.setPropField("age");
-	// rule2Criteria2PkProp.setPropType(PropertyConstant.TYPE_NUM);
+	// rule1Criteria2.setPropField("age2");
 	// rule2Criteria2.setOperator(RuleConstant.OPR_LE);
 	// rule2Criteria2.setVal1("10");
 	// rule2Criteria2.setVal2("20");
 	//
-	// return ruleList;
+	// return ruleSet;
 	// }
 	//
 	// public static void main(String[] args) {
-	// List<Rule> ruleList = getTestRuleList();
+	// Map<String, Property> propertyMap = new HashMap<>();
+	// Property prop1 = new Property();
+	// prop1.setPropField("age");
+	// prop1.setPropType(PropertyConstant.TYPE_NUM);
+	// propertyMap.put(prop1.getPropField(), prop1);
+	// Property prop2 = new Property();
+	// prop2.setPropField("type");
+	// prop2.setPropType(PropertyConstant.TYPE_STR);
+	// propertyMap.put(prop2.getPropField(), prop2);
+	// Property prop3 = new Property();
+	// prop3.setPropField("age2");
+	// prop3.setPropType(PropertyConstant.TYPE_NUM);
+	// propertyMap.put(prop3.getPropField(), prop3);
+	//
+	// Set<Rule> ruleSet = getTestRuleList();
+	//
+	// Set<Long> collIdSet = new HashSet<>();
+	// collIdSet.add(1L);
 	//
 	// boolean isFirstRule = true;
 	// int criteriaIndex = 0;
 	// Map<String, Object> paramMap = new HashMap<>();
 	// StringBuilder querySb = new StringBuilder("from colleteral where");
 	//
-	// for (Rule rule : ruleList) {
+	// for (Rule rule : ruleSet) {
 	// Set<RuleCriteria> ruleCriteriaSet = rule.getRuleCriteriaSet();
 	//
 	// if (CollectionUtils.isNotEmpty(ruleCriteriaSet)) {
@@ -221,7 +240,8 @@ public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implemen
 	// isFirstRule = false;
 	// }
 	//
-	// querySb.append("(\n");
+	// querySb.append("(");
+	// querySb.append("\n");
 	// boolean isFirstCriteria = true;
 	//
 	// for (RuleCriteria ruleCriteria : ruleCriteriaSet) {
@@ -232,9 +252,8 @@ public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implemen
 	// }
 	//
 	// String operator = ruleCriteria.getOperator();
-	// Property property = ruleCriteria.getPk().getProperty();
-	// String propField = property.getPropField();
-	// String propType = property.getPropType();
+	// String propField = ruleCriteria.getPropField();
+	// String propType = propertyMap.get(propField).getPropType();
 	// String paramKey = String.format("cri%dVal1", criteriaIndex);
 	// paramMap.put(paramKey, ruleCriteria.getVal1());
 	//
@@ -259,14 +278,24 @@ public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implemen
 	//
 	// criteriaIndex++;
 	// }
-	// querySb.append("\n)");
+	// querySb.append("\n");
+	// querySb.append(")");
 	// }
+	// }
+	//
+	// if (collIdSet != null) {
+	// querySb.append("\n");
+	// querySb.append("and collId in (:collIdSet)");
 	// }
 	//
 	// System.out.println(querySb.toString());
 	//
 	// for (String paramKey : paramMap.keySet()) {
-	// System.out.println(paramKey + " " + paramMap.get(paramKey));
+	// System.out.println(paramKey);
+	// }
+	//
+	// if (collIdSet != null) {
+	// System.out.println("collIdSet");
 	// }
 	// }
 }

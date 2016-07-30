@@ -12,13 +12,13 @@ import com.teamset.colcap.domain.entity.rule.Rule;
 @Repository
 public class RuleDaoImpl extends GenericDaoImpl<Rule, Long> implements RuleDao {
 
-	private final static String ACCT_ID = "acctId";
+	private final static String MASTER_RULE_ID = "masterRuleId";
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Rule> findRule(Long acctId) {
+	public List<Rule> findRule(Long masterRuleId) {
 		Criteria criteria = getSession().createCriteria(Rule.class);
-		criteria.add(Restrictions.eq(ACCT_ID, acctId));
+		criteria.add(Restrictions.eq(MASTER_RULE_ID, masterRuleId));
 
 		return criteria.list();
 	}

@@ -1,13 +1,11 @@
 package com.teamset.colcap.domain.entity.rule;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -20,22 +18,20 @@ public class Rule implements Serializable {
 	@Column(name = "RULE_ID")
 	private Long ruleId;
 
-	@Column(name = "ACCT_ID")
-	private Long acctId;
+	@Column(name = "MASTER_RULE_ID")
+	private Long masterRuleId;
 
-	@Column(name = "RULE_NAME")
-	private String ruleName;
+	@Column(name = "RULE_TYPE")
+	private Character ruleType;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.rule")
-	private Set<RuleCriteria> ruleCriteriaSet;
+	@Column(name = "HAIRCUT_RATE")
+	private BigDecimal haircutRate;
 
-	public Set<RuleCriteria> getRuleCriteriaSet() {
-		return ruleCriteriaSet;
-	}
+	@Column(name = "FX_HAIRCUT_RATE")
+	private BigDecimal fxHaircutRate;
 
-	public void setRuleCriteriaSet(Set<RuleCriteria> ruleCriteriaSet) {
-		this.ruleCriteriaSet = ruleCriteriaSet;
-	}
+	@Column(name = "RUN_SEQ")
+	private Integer runSeq;
 
 	public Long getRuleId() {
 		return ruleId;
@@ -45,20 +41,44 @@ public class Rule implements Serializable {
 		this.ruleId = ruleId;
 	}
 
-	public Long getAcctId() {
-		return acctId;
+	public Long getMasterRuleId() {
+		return masterRuleId;
 	}
 
-	public void setAcctId(Long acctId) {
-		this.acctId = acctId;
+	public void setMasterRuleId(Long masterRuleId) {
+		this.masterRuleId = masterRuleId;
 	}
 
-	public String getRuleName() {
-		return ruleName;
+	public Character getRuleType() {
+		return ruleType;
 	}
 
-	public void setRuleName(String ruleName) {
-		this.ruleName = ruleName;
+	public void setRuleType(Character ruleType) {
+		this.ruleType = ruleType;
+	}
+
+	public BigDecimal getHaircutRate() {
+		return haircutRate;
+	}
+
+	public void setHaircutRate(BigDecimal haircutRate) {
+		this.haircutRate = haircutRate;
+	}
+
+	public BigDecimal getFxHaircutRate() {
+		return fxHaircutRate;
+	}
+
+	public void setFxHaircutRate(BigDecimal fxHaircutRate) {
+		this.fxHaircutRate = fxHaircutRate;
+	}
+
+	public Integer getRunSeq() {
+		return runSeq;
+	}
+
+	public void setRunSeq(Integer runSeq) {
+		this.runSeq = runSeq;
 	}
 
 	@Override
