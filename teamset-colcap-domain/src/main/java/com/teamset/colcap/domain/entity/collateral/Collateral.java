@@ -53,7 +53,7 @@ public class Collateral implements Serializable {
 	private Integer ctrPartyAge;
 
 	@Column(name = "CTR_PARTY_RATING")
-	private Integer ctrPartyRating;
+	private String ctrPartyRating;
 
 	@Column(name = "EXP_SECURED")
 	private BigDecimal expSecured;
@@ -157,11 +157,11 @@ public class Collateral implements Serializable {
 		this.ctrPartyAge = ctrPartyAge;
 	}
 
-	public Integer getCtrPartyRating() {
+	public String getCtrPartyRating() {
 		return ctrPartyRating;
 	}
 
-	public void setCtrPartyRating(Integer ctrPartyRating) {
+	public void setCtrPartyRating(String ctrPartyRating) {
 		this.ctrPartyRating = ctrPartyRating;
 	}
 
