@@ -10,5 +10,5 @@
  */
 angular.module('colcap',  [ "ui.select",'colcap.sweetAlert',
 	            			"datatables",
-	            			,'colcap.router','colcap.icheck','colcap.pageTitle','colcap.sweetAlert','colcap.ruleService']);
+	            			,'colcap.router','colcap.icheck','colcap.pageTitle','colcap.sweetAlert','colcap.ruleService','colcap.homeService']);
 })();

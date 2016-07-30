@@ -19,7 +19,7 @@ import com.teamset.colcap.domain.dao.DomainConfig;
 @ComponentScan({"com.teamset.controller", "com.teamset.restc"})
 @PropertySource(value = {"classpath:web.application.config.properties"})
 @EnableWebMvc
-@Import({HibernateConfig.class,DomainConfig.class, CoreConfig.class,SecurityConfiguration.class})
+@Import({HibernateConfig.class,DomainConfig.class, CoreConfig.class})
 public class WebApplicationConfig extends WebMvcConfigurerAdapter {
 
     private final static Logger logger = LoggerFactory.getLogger(WebApplicationConfig.class);

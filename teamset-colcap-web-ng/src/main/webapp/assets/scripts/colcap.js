@@ -249,9 +249,25 @@ angular.module('colcap',  [ "ui.select",'colcap.sweetAlert',
 (function() {
 	'use strict';
 	angular.module(	"colcap")
-	.controller("MainCtrl", ['$scope','$http',mainCtrl])
+	.controller("MainCtrl", ['$scope','$http','homeService','DTOptionsBuilder',mainCtrl])
 	
-function mainCtrl($scope,$http){
+function mainCtrl($scope,$http,homeService,DTOptionsBuilder){
+	var ctrl = this;
+	ctrl.triggered = false;
+	ctrl.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(50);
+	
+	homeService.getCollList().then(function(response){
+		ctrl.collList = response.data;
+	});
+	
+	ctrl.trigger = function() {
+		ctrl.triggered = true;
+		
+		homeService.calcCollCapReq().then(function(response){
+			ctrl.result = response.data;
+		});
+	}
+
 }
 	
 })();
@@ -305,6 +321,30 @@ function config($stateProvider, $urlRouterProvider,$breadcrumbProvider) {
         });
 };
 
+})();
+"use strict";
+(function() {
+    var serviceApp = angular.module("colcap.homeService", []);
+    serviceApp.factory("homeService", ["$http",homeService])
+    function homeService($http) {
+    	 var ret = {};
+    	 ret.getCollList = function() {
+             return $http({
+                 method: "POST",
+                 url:  "coll/get-coll-list"
+             })
+         };
+         
+         ret.calcCollCapReq = function() {
+             return $http({
+                 method: "POST",
+                 url:  "coll/calc-coll-cap-req"
+             })
+         };
+         
+         return ret;
+    }
+      
 })();
 (function() {
 	'use strict';

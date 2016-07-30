@@ -143,12 +143,13 @@
 			  </div>
 			</div>
 		</div>
-		
+		<div class="col-xl-12">
+				<span class="label label-danger" ng-if="addRulesForm.$invalid || ruleModalCtrl.rule.ruleCriterias.length <=0">Please fill in all the mandatory field</span>
+		</div>
 	</form>
 			<div class="modal-footer">
 				<button class="btn btn-default "  ng-click="ruleModalCtrl.close()">Close</button>
-				<button class="btn btn-primary " ng-disabled="addRulesForm.$invalid " ng-click="ruleModalCtrl.submit()">Save</button>
+				<button class="btn btn-primary " ng-disabled="addRulesForm.$invalid || ruleModalCtrl.rule.ruleCriterias.length <=0" ng-click="ruleModalCtrl.submit()">Save</button>
 			</div>
-	
 </div>
 </div>

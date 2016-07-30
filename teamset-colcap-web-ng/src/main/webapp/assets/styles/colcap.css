@@ -6014,7 +6014,6 @@ main {
 
 @media ( min-width :768px) {
 	#page-wrapper {
-		padding-right: 275px;
 		max-width: 1700px;
 		padding-left: 15px
 	}
@@ -6034,7 +6033,6 @@ main {
 	#page-wrapper #rhs {
 		width: 240px;
 		float: right;
-		margin-right: -260px
 	}
 }
 
