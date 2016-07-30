@@ -1,5 +1,6 @@
 package com.teamset.colcap.domain.dao.collateral;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,72 +38,78 @@ public class CollateralDaoImpl extends GenericDaoImpl<Collateral, Long> implemen
 	public List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet) {
 		Criteria criteria = getSession().createCriteria(Collateral.class);
 		criteria.add(Restrictions.eq(ACCT_ID, acctId));
-		criteria.add(Restrictions.not(Restrictions.in(COLL_ID, collIdSet)));
+
+		if (CollectionUtils.isNotEmpty(collIdSet)) {
+			criteria.add(Restrictions.not(Restrictions.in(COLL_ID, collIdSet)));
+		}
 
 		return criteria.list();
 	}
 
 	@Override
-	public List<Collateral> findEligibleColleteral(Rule eligibilityRule, Map<String, Property> propertyMap) {
-		return findColleteral(ruleCriteriaDao.findRuleCriteria(eligibilityRule.getRuleId()), null, propertyMap);
+	public List<Collateral> findEligibleColleteral(Rule eligibilityRule, String collType, Map<String, Property> propertyMap) {
+		return findColleteral(ruleCriteriaDao.findRuleCriteria(eligibilityRule.getRuleId()), collType, null, propertyMap);
 	}
 
-	public List<Collateral> findColleteralForHaircut(Rule haircutRule, Set<Long> collIdSet, Map<String, Property> propertyMap) {
-		return findColleteral(ruleCriteriaDao.findRuleCriteria(haircutRule.getRuleId()), collIdSet, propertyMap);
+	@Override
+	public List<Collateral> findColleteralForHaircut(Rule haircutRule, String collType, Set<Long> collIdSet, Map<String, Property> propertyMap) {
+		return findColleteral(ruleCriteriaDao.findRuleCriteria(haircutRule.getRuleId()), collType, collIdSet, propertyMap);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Collateral> findColleteral(List<RuleCriteria> ruleCriteriaList, Set<Long> collIdSet, Map<String, Property> propertyMap) {
+	public List<Collateral> findColleteral(List<RuleCriteria> ruleCriteriaList, String collType, Set<Long> collIdSet, Map<String, Property> propertyMap) {
+		if (CollectionUtils.isEmpty(ruleCriteriaList)) {
+			return new ArrayList<>();
+		}
+
 		boolean isFirstRule = true;
 		int criteriaIndex = 0;
 		Map<String, Object> paramMap = new HashMap<>();
-		StringBuilder querySb = new StringBuilder("from colleteral where");
+		StringBuilder querySb = new StringBuilder(String.format("from %s where", Collateral.class.getName()));
 
-		if (CollectionUtils.isNotEmpty(ruleCriteriaList)) {
-			querySb.append("\n");
+		querySb.append("\n");
 
-			if (!isFirstRule) {
-				querySb.append("or ");
-			} else {
-				isFirstRule = false;
-			}
-
-			querySb.append("(");
-			querySb.append("\n");
-			boolean isFirstCriteria = true;
-
-			for (RuleCriteria ruleCriteria : ruleCriteriaList) {
-				if (!isFirstCriteria) {
-					querySb.append("and ");
-				} else {
-					isFirstCriteria = false;
-				}
-
-				String operator = ruleCriteria.getOperator();
-				String propField = ruleCriteria.getPk().getPropField();
-				String propType = propertyMap.get(propField).getPropType();
-				String paramKey = String.format("cri%dVal1", criteriaIndex);
-				paramMap.put(paramKey, ruleCriteria.getVal1());
-
-				if (RuleConstant.OPR_EQ.equals(operator) || RuleConstant.OPR_NE.equals(operator) || RuleConstant.OPR_GT.equals(operator) || RuleConstant.OPR_GE.equals(operator)
-						|| RuleConstant.OPR_LT.equals(operator) || RuleConstant.OPR_LE.equals(operator)) {
-					querySb.append(getCriteriaStr(operator, propField, propType, paramKey));
-				} else {
-					querySb.append(getCriteriaStr(RuleConstant.OPR_GE, propField, propType, paramKey));
-
-					String paramKey2 = String.format("cri%dVal2", criteriaIndex);
-					paramMap.put(paramKey2, ruleCriteria.getVal2());
-
-					querySb.append("and ");
-					querySb.append(getCriteriaStr(RuleConstant.OPR_LE, propField, propType, paramKey));
-				}
-
-				criteriaIndex++;
-			}
-			querySb.append("\n");
-			querySb.append(")");
+		if (!isFirstRule) {
+			querySb.append("or ");
+		} else {
+			isFirstRule = false;
 		}
+
+		querySb.append("(");
+		querySb.append("\n");
+		boolean isFirstCriteria = true;
+
+		for (RuleCriteria ruleCriteria : ruleCriteriaList) {
+			if (!isFirstCriteria) {
+				querySb.append("and ");
+			} else {
+				isFirstCriteria = false;
+			}
+
+			String operator = ruleCriteria.getOperator();
+			String propField = ruleCriteria.getPk().getPropField();
+			String propType = propertyMap.get(propField).getPropType();
+			String paramKey = String.format("cri%dVal1", criteriaIndex);
+			paramMap.put(paramKey, ruleCriteria.getVal1());
+
+			if (RuleConstant.OPR_EQ.equals(operator) || RuleConstant.OPR_NE.equals(operator) || RuleConstant.OPR_GT.equals(operator) || RuleConstant.OPR_GE.equals(operator)
+					|| RuleConstant.OPR_LT.equals(operator) || RuleConstant.OPR_LE.equals(operator)) {
+				querySb.append(getCriteriaStr(operator, propField, propType, paramKey));
+			} else {
+				querySb.append(getCriteriaStr(RuleConstant.OPR_GE, propField, propType, paramKey));
+
+				String paramKey2 = String.format("cri%dVal2", criteriaIndex);
+				paramMap.put(paramKey2, ruleCriteria.getVal2());
+
+				querySb.append("and ");
+				querySb.append(getCriteriaStr(RuleConstant.OPR_LE, propField, propType, paramKey));
+			}
+
+			criteriaIndex++;
+		}
+		querySb.append("\n");
+		querySb.append(")");
 
 		if (collIdSet != null) {
 			querySb.append("\n");

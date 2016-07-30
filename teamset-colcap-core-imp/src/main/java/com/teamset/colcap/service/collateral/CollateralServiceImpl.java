@@ -45,13 +45,19 @@ public class CollateralServiceImpl implements CollateralService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet) {
-		return findColleteral(acctId, collIdSet);
+	public List<Collateral> findColleteral(Long acctId) {
+		return collateralDao.findColleteral(acctId, null);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Set<CollateralHaircut> findColleteralHaircut(List<MasterRule> masterRuleList, Long collId) {
+	public List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet) {
+		return collateralDao.findColleteral(acctId, collIdSet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Set<CollateralHaircut> findColleteralHaircut(List<MasterRule> masterRuleList) {
 		Set<CollateralHaircut> collHaircutSet = new HashSet<>();
 		Map<String, Property> propertyMap = getPropertyMap();
 		RuleRunSeqComparator ruleRunSeqComparator = new RuleRunSeqComparator();
@@ -72,7 +78,7 @@ public class CollateralServiceImpl implements CollateralService {
 				}
 
 				if (eligibilityRule != null) {
-					List<Collateral> eligibleCollList = collateralDao.findEligibleColleteral(eligibilityRule, propertyMap);
+					List<Collateral> eligibleCollList = collateralDao.findEligibleColleteral(eligibilityRule, masterRule.getCollType(), propertyMap);
 
 					if (CollectionUtils.isNotEmpty(eligibleCollList)) {
 						Map<Long, Collateral> eligibleCollMap = new HashMap<>();
@@ -84,7 +90,7 @@ public class CollateralServiceImpl implements CollateralService {
 						if (CollectionUtils.isNotEmpty(haircutRuleList)) {
 							Collections.sort(haircutRuleList, ruleRunSeqComparator);
 							outer: for (Rule haircutRule : haircutRuleList) {
-								List<Collateral> collList = collateralDao.findColleteralForHaircut(haircutRule, eligibleCollMap.keySet(), propertyMap);
+								List<Collateral> collList = collateralDao.findColleteralForHaircut(haircutRule, masterRule.getCollType(), eligibleCollMap.keySet(), propertyMap);
 
 								for (Collateral coll : collList) {
 									collHaircutSet.add(new CollateralHaircut(coll, haircutRule));

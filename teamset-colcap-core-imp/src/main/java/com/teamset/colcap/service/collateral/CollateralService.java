@@ -11,8 +11,10 @@ public interface CollateralService {
 
 	Collateral get(Long collId);
 
+	List<Collateral> findColleteral(Long acctId);
+
 	List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet);
 
-	Set<CollateralHaircut> findColleteralHaircut(List<MasterRule> masterRuleList, Long collId);
+	Set<CollateralHaircut> findColleteralHaircut(List<MasterRule> masterRuleList);
 
 }
