@@ -16,4 +16,8 @@ public final class RuleConstant {
 
 	public static final String OPR_BT = "BT";
 
+	public static final char RULE_TYPE_ELIGIBILITY_RULE = 'C';
+
+	public static final char RULE_TYPE_HAIRCUT_RULE = 'H';
+
 }

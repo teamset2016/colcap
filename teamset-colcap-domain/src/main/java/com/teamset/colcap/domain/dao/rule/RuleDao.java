@@ -7,6 +7,6 @@ import com.teamset.colcap.domain.entity.rule.Rule;
 
 public interface RuleDao extends GenericDao<Rule, Long> {
 
-	List<Rule> findRule(Long acctId);
+	List<Rule> findRule(Long masterRuleId);
 
 }

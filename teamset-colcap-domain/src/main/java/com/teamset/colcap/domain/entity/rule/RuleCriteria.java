@@ -19,9 +19,6 @@ public class RuleCriteria implements Serializable, BaseRuleCriteria {
 	@Column(name = "OPERATOR")
 	private String operator;
 
-	@Column(name = "VAL_TYPE")
-	private String valueType;
-
 	@Column(name = "VAL1")
 	private String val1;
 
@@ -42,14 +39,6 @@ public class RuleCriteria implements Serializable, BaseRuleCriteria {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
-	}
-
-	public String getValueType() {
-		return valueType;
-	}
-
-	public void setValueType(String valueType) {
-		this.valueType = valueType;
 	}
 
 	public void setVal1(String val1) {
