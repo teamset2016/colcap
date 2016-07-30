@@ -14,10 +14,10 @@ public interface CollateralDao extends GenericDao<Collateral, Long> {
 
 	List<Collateral> findColleteral(Long acctId, Set<Long> collIdSet);
 
-	List<Collateral> findEligibleColleteral(Rule eligibilityRule, Map<String, Property> propertyMap);
+	List<Collateral> findEligibleColleteral(Rule eligibilityRule, String collType, Map<String, Property> propertyMap);
 
-	List<Collateral> findColleteralForHaircut(Rule haircutRule, Set<Long> collIdSet, Map<String, Property> propertyMap);
+	List<Collateral> findColleteralForHaircut(Rule haircutRule, String collType, Set<Long> collIdSet, Map<String, Property> propertyMap);
 
-	List<Collateral> findColleteral(List<RuleCriteria> ruleCriteriaList, Set<Long> collIdSet, Map<String, Property> propertyMap);
+	List<Collateral> findColleteral(List<RuleCriteria> ruleCriteriaList, String collType, Set<Long> collIdSet, Map<String, Property> propertyMap);
 
 }

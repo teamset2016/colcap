@@ -1,64 +1,147 @@
+<div ng-controller="MainCtrl as ctrl">
+
+	<div class="card-block" ng-show="ctrl.triggered == false && ctrl.collList">
+		<table datatable="" dt-options="ctrl.dtOptions" class="table table-hover table-condensed table-striped">
+			<thead>
+				<tr>
+					<th>Collateral Name</th>
+					<th>Collateral Type</th>
+					<th>Collateral Sub Type</th>
+					<th>Collateral Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="coll in ctrl.collList">
+					<td>{{coll.collName}}</td>
+					<td>{{coll.collType}}</td>
+					<td>{{coll.collSubType}}</td>
+					<td>{{coll.collValCurrCode}} {{coll.collVal | number : 2}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<button class="btn btn-warning row" ng-click="ctrl.trigger()">Trigger</button>
+	</div>
+	
+	<div ng-show="ctrl.triggered == true && !ctrl.result">
+		<h2>Loading...</h2>
+	</div>
+
+	<div ng-show="ctrl.triggered == true && ctrl.result" ng-cloak>
+		<div class="col-xl-6">
+			<div class="card card-block row">
+				<h4 class="card-title">Total Exposure</h4>
+				<p class="card-text">{{ctrl.result.currencyCode}} {{ctrl.result.totalExp | number : 2}}</p>
+			</div>
+		</div>
+
+		<div class="col-xl-6">
+			<div class="card card-block row">
+				<h4 class="card-title">Total Exposure After Eligible Mitigants</h4>
+				<p class="card-text">{{ctrl.result.currencyCode}} {{ctrl.result.totalCapitalReq | number : 2}}</p>
+			</div>
+		</div>
+
+		<div class="col-xl-6">
+			<div class="card card-block row">
+				<div class="col-xl-6">
+					<h4 class="card-title"># of Collaterals</h4>
+				</div>
+				<div class="col-xl-6">
+					<h4 class="card-title">{{ctrl.result.totalEligibleCount + ctrl.result.totalNonEligibleCount | number}}</h4>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						# of Eligible
+					</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						{{ctrl.result.totalEligibleCount | number}}
+					</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						# of Ineligible
+					</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						{{ctrl.result.totalNonEligibleCount | number}}
+					</p>
+				</div>
+			</div>
+		</div>
 
 
-<div class="col-xl-6">
-<div class="card card-block">
-  <h4 class="card-title">Total Exposure</h4>
-  <p class="card-text">100,000,000</p>
-</div>
-</div>
+		<div class="col-xl-6">
+			<div class="card card-block row">
+				<div class="col-xl-6">
+					<h4 class="card-title">$ of Collaterals</h4>
+				</div>
+				<div class="col-xl-6">
+					<h4 class="card-title">{{ctrl.result.currencyCode}} {{ctrl.result.totalEligibleColl + ctrl.result.totalNonEligibleColl | number : 2}}</h4>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						# of Eligible
+					</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						{{ctrl.result.currencyCode}} {{ctrl.result.totalEligibleColl | number : 2}}
+					</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						# of Ineligible
+					</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">
+						{{ctrl.result.currencyCode}} {{ctrl.result.totalNonEligibleColl | number : 2}}
+					</p>
+				</div>
+			</div>
+		</div>
 
-<div class="col-xl-6">
-<div class="card card-block">
-  <h4 class="card-title">Total Exposure After Eligible Mitigants</h4>
-  <p class="card-text">$666,666,666</p>
-</div>
-</div>
-
-<div class="col-xl-6">
-<div class="card card-block">
-  <h4 class="card-title"># of Collaterals</h4>
-  <p class="card-text"># of Eligible<br/> # of ineligible</p>
-</div>
-</div>
-
-
-<div class="col-xl-6">
-<div class="card card-block">
-  <h4 class="card-title">$ of Collaterals</h4>
-  <p class="card-text"># of Eligible<br/> # of ineligible</p>
-</div>
-</div>
-
-<div class="col-xl-6">
-<div class="card card-block">
-  <h4 class="card-title">Collaterals Concentrations</h4>
-  <table>
-  	<tr>
-  	<td colspan="2">
-  	Cash
-  	</td>
-  	<td>
-  	XX %
-  	</td>
-  	</tr>
-  
-  </table>
-</div>
-</div>
-
-<div class="col-xl-6">
-<div class="card card-block">
-  <h4 class="card-title">Collaterals Tier</h4>
-  <table>
-  	<tr>
-  	<td colspan="2">
-  	Tier A
-  	</td>
-  	<td>
-  	XX %
-  	</td>
-  	</tr>
-  
-  </table>
-</div>
+		<div class="col-xl-6">
+			<div class="card card-block row">
+				<h4 class="card-title">Collaterals Concentrations</h4>
+				<div class="col-xl-6">
+					<p class="card-text">Equities</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">{{ctrl.result.totalEquity / (ctrl.result.totalEligibleColl + ctrl.result.totalNonEligibleColl) * 100 | number : 2}} %</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">Cash</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">{{ctrl.result.totalCash / (ctrl.result.totalEligibleColl + ctrl.result.totalNonEligibleColl) * 100 | number : 2}} %</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">Metals</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">{{ctrl.result.totalMetals / (ctrl.result.totalEligibleColl + ctrl.result.totalNonEligibleColl) * 100 | number : 2}} %</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">Debt Securities</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">{{ctrl.result.totalDebt / (ctrl.result.totalEligibleColl + ctrl.result.totalNonEligibleColl) * 100 | number : 2}} %</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">Real Estate</p>
+				</div>
+				<div class="col-xl-6">
+					<p class="card-text">{{ctrl.result.totalProperty / (ctrl.result.totalEligibleColl + ctrl.result.totalNonEligibleColl) * 100 | number : 2}} %</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-12">
+			<button class="btn btn-success" ng-click="ctrl.triggered = false">Reset</button>
+		</div>
+	</div>
 </div>
