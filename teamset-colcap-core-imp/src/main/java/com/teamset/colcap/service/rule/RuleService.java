@@ -18,11 +18,13 @@ public interface RuleService {
 	void add(RuleDisplay rule);
 
 	List<Rule> findRule(Long masterRuleId);
+	void add(Rule rule);
 
 	List<MasterRule> findMasterRule(Long acctId);
 
 	List<RuleCriteria> findRuleCriteria(Long ruleId);
 	
 	RuleDisplay getRuleDisplay(Long masterRuleId);
+
 
 }

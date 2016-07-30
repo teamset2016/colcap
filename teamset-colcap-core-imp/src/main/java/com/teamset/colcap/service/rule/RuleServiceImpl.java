@@ -186,4 +186,11 @@ public class RuleServiceImpl implements RuleService {
 		}
 		return ruleDisplay;
 	}
+		
+	public void add(Rule rule) {
+		ruleDao.add(rule);
+
+	}
+
+
 }
