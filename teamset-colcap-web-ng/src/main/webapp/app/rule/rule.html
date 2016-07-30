@@ -1,0 +1,42 @@
+
+<div class="card card-primary card-border" ng-controller="RuleCtrl as ruleCtrl">
+  <treasure-overlay-spinner active="ruleCtrl.isLoading">
+
+<div class="card-header ">Rules
+	<div class="pull-right">
+		<button class="btn-sm btn btn-primary" ng-click="ruleCtrl.openChartDialog()"> Add Rule</button>
+	</div>
+</div>
+<div class="card-block">
+	<table datatable="" class="table table-hover table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>
+				Rule Id
+				</th>
+				<th>
+				Rule Description
+				</th>
+				<th>
+				Action
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="rule in ruleCtrl.ruleList">
+			<td>
+				<span ng-bind="rule.ruleId"> </span>
+			</td>
+			<td>
+				<span ng-bind="rule.desc"> </span>
+			</td>
+			<td>
+				<button class="btn btn-info" ng-click="ruleCtrl.editRule(rule)">Edit</button>
+				<button class="btn btn-danger" ng-click="ruleCtrl.deleteRule()">Remove</button>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+</treasure-overlay-spinner>
+</div>

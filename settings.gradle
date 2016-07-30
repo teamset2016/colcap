@@ -1,1 +1,1 @@
-include 'teamset-colcap-core', 'teamset-colcap-core-imp','teamset-colcap-persistence','teamset-colcap-domain'
+include 'teamset-colcap-core', 'teamset-colcap-core-imp','teamset-colcap-persistence','teamset-colcap-domain','teamset-colcap-web-ng'

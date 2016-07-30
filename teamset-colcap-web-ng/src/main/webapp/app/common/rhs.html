@@ -1,0 +1,119 @@
+
+<div class="rhs">
+	<div class="card">
+		<div class="card-block">
+			<div class="clearfix ">
+				<div class="btn-group pull-right">
+					<a href="adviser" class="btn btn-xs btn-default ">
+						<i class="fa fa-user"></i>
+					</a>
+					<a href="#" class="btn btn-xs btn-default">
+						<i class="fa fa-cog"></i>
+					</a>
+					<a href="logout" class="btn btn-xs btn-danger ">
+						<i class="fa fa-power-off"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="text-center">
+				<div class="m-b-sm">
+					<img alt="image" style="width:80px "class="img-circle" src="https://tse1.mm.bing.net/th?id=OIP.M48fe8974ae0ff06403cc3bf4330956eco1&w=149&h=148&c=7&rs=1&qlt=90&o=4&pid=1.1">
+				</div>
+				<h4> {{main.userName}}</h4>
+				<small class="muted">
+					Last Login xxxx /xxx/xxx
+
+				</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class='card-header'>
+			<div class="card-tools">
+				<a href="#">More </a>
+			</div>
+			My Calander
+		</div>
+		<div class="card-block">
+
+			<tabset class="tabs">
+				<tab heading="Calander" class="m-b-sm">   
+				 <div>
+					<datepicker ng-model="dt" min-date="minDate" show-weeks="true" class="rhs-calander" custom-class="getDayClass(date, mode)"></datepicker>
+
+				</div>
+			</tab>
+			<tab heading="List View" class="m-b-sm">
+
+				<table class="table table-condensed table-xs table-striped">
+					<tr>
+						<tr>
+							<th>Client</th>
+							<th>When</th>
+						</tr>
+
+						<tr >
+							<td ><a href="link to client">Tia hong</a></td>
+							<td class="text-center">Friday, 9/11/2015</td>
+						</tr>
+
+
+						<tr >
+							<td ><a href="../fundsinfo/fundFactSheet.svdo?dest=FSGBRE">Tia hong</a></td>
+							<td class="text-center">Friday, 9/11/2015</td>
+						</tr>
+
+						<tr >
+							<td ><a href="../fundsinfo/fundFactSheet.svdo?dest=FSGBRE">Tia hong</a></td>
+							<td class="text-center">Friday, 9/11/2015</td>
+						</tr>
+
+					</tbody></table>
+
+
+
+				</tab>
+			</tabset>
+			<div class="p-sm">
+				<a href="#" class="btn btn-xs btn-default"><i class="fa fa-plus fa-fw"></i> Create New Activity</a> 
+			</div>
+
+		</div>
+
+
+
+
+
+	</div>
+
+
+	<div class="card card-inverse card-primary">
+
+
+		<div class="card-block">
+			<blockquote class="card-blockquote">
+				<h4>Contant us</h4>
+
+				<address>
+					<span class="fa fa-phone fa-fw"></span> <strong>Phone:</strong>
+					65-6557 2000<br> <span class="fa fa-fax fa-fw"></span> <strong>Fax:</strong>
+					65-6557 2601<br> <span class="fa fa-envelope-o fa-fw"></span>
+					<strong>Email Address:</strong>
+				</address>
+			</blockquote>
+
+
+			<a class="btn btn-info" href="mailto:ifastadmin@ifastfinancial.com">Email
+				Us</a>
+
+		</div>
+	</div>
+
+
+
+</div>
+
+
+</div>

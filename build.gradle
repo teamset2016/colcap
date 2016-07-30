@@ -19,7 +19,7 @@ if (!hasProperty("profile")) {
 ext.depsVer = [
     springHibernate:'4.3.1.Final',
     springSecurity:'4.0.3.RELEASE',
-    ng:'1.4.7'
+    ng:'1.4.8'
 ]
 
 
@@ -48,6 +48,8 @@ project(':teamset-colcap-domain') {
         compile "org.hibernate:hibernate-validator:${depsVer.springHibernate}"
         compile "javax.inject:javax.inject:1"
         compile "org.hibernate:hibernate-c3p0:4.3.1.Final"
+		compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
+        
      }
 }
 
@@ -68,6 +70,8 @@ project(':teamset-colcap-core') {
 		compile "org.springframework.security:spring-security-web:${depsVer.springSecurity}"
 	 	compile project(':teamset-colcap-domain')
 	 	compile project(':teamset-colcap-persistence')
+		compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
+	 	
     }
 }
 
@@ -79,5 +83,169 @@ project(':teamset-colcap-core-imp') {
 	 	compile project(':teamset-colcap-domain')
 	 	compile project(':teamset-colcap-persistence')
     }
+}
+
+
+project(':teamset-colcap-web-ng'){
+		 apply plugin: 'war'
+		 apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+		 apply plugin: 'js'
+		 apply plugin: 'css'
+		 def cssfile = "colcap-min.css"
+		 def jsfile = "colcap-min.js"
+
+		if(profile == "local"){
+			cssfile = "colcap.css"
+			jsfile = "colcap.js"
+			task compileJsCss (dependsOn: ['combineJs'])
+		}
+		else{
+			task compileJsCss (dependsOn: ['minifyJs'])
+		}
+		
+		processResources.dependsOn compileJsCss
+		
+		
+	String[] javaSrcs = ["src/main/webapp/assets/scripts/component/","src/main/webapp/assets/scripts/constant/","src/main/webapp/assets/scripts/services/","src/main/webapp/app/"]
+		javascript.source {
+		    dev{
+		        js {
+		            srcDirs javaSrcs
+		            include  "**/*.js"
+		        }
+		    }
+		}
+		
+		combineJs {
+		    source = [javascript.source.dev.js.files]
+		    dest = file("src/main/webapp/assets/scripts/$jsfile")
+		    
+		}
+		
+		minifyJs {
+		    source = combineJs
+		    dest = file("src/main/webapp/assets/scripts/$jsfile")
+		    closure {
+			        warningLevel = 'QUIET'
+			    }
+		}
+		
+		css.source {
+		    less {
+		        css {
+		            srcDir "src/main/less"
+		            include "**/*.less"
+		        }
+		    }
+		    dev {
+		        css {
+		            srcDir "src/main/css"
+		            include "**/*.css"
+		        }
+		    }
+		}
+		
+		lesscss {
+		    source = css.source.less.css.files
+		    dest = "src/main/css"
+		}
+		
+		
+		combineCss {
+		    source = lesscss
+		    dest = file("src/main/webapp/assets/styles/$cssfile")
+		}
+
+		minifyCss {
+		    source = combineCss
+		    dest = file("src/main/webapp/assets/styles/$cssfile")
+
+		}
+    	 dependencies {
+    	 	compile project(':teamset-colcap-domain')
+    	 	compile project(':teamset-colcap-core-imp')
+	        compile project(':teamset-colcap-persistence')
+			compile "org.slf4j:slf4j-api:1.7.8"
+			compile "org.springframework:spring-webmvc:4.1.6.RELEASE"
+			compile "org.springframework.security:spring-security-core:3.2.5.RELEASE"
+			compile "org.springframework.security:spring-security-config:3.2.5.RELEASE"
+			compile "org.springframework.security:spring-security-web:3.2.5.RELEASE"
+			compile "javax.servlet:servlet-api:2.3"
+			compile "com.fasterxml.jackson.core:jackson-core:2.4.0"
+			compile "com.fasterxml.jackson.core:jackson-annotations:2.4.0"
+			compile "com.fasterxml.jackson.core:jackson-databind:2.4.0"
+			compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.4.0"
+			compile "javax.servlet:jstl:1.2"
+			providedCompile "javax.servlet:servlet-api:2.5"
+			
+			compile "org.webjars:jquery:2.1.4"
+		    compile ("org.webjars.bower:angularjs:${depsVer.ng}"){
+		    	force = true
+		    }
+		    compile "org.webjars.bower:angular-animate:${depsVer.ng}"
+		    compile "org.webjars.bower:angular-aria:${depsVer.ng}"
+		    compile "org.webjars.bower:angular-bootstrap:0.14.3"
+		    compile "org.webjars.bower:angular-cookies:${depsVer.ng}"
+		    compile "org.webjars.bower:angular-messages:${depsVer.ng}"
+		    compile "org.webjars.bower:angular-resource:${depsVer.ng}"
+		    
+		    compile "org.webjars.bower:angular-sanitize:${depsVer.ng}"
+		    compile "org.webjars.bower:angular-touch:${depsVer.ng}"
+
+		    compile "org.webjars:angular-translate-handler-log:2.4.2"
+		    compile "org.webjars:angular-dynamic-locale:0.1.27"
+		    compile "org.webjars.bower:angular-i18n:${depsVer.ng}"
+		    compile "org.webjars:bootstrap:3.3.5"
+		    compile ("org.webjars.bower:angular-ui-router:0.3.1"){
+		    	force = true
+		    }
+		    compile 'org.webjars.bower:angular-breadcrumb:0.4.0'
+			compile 'org.webjars.bower:oclazyload:1.0.6'
+			compile 'org.webjars.bower:iCheck:1.0.2'
+			compile 'org.webjars:jquery.sparkline:2.1.2'
+			compile 'org.webjars.bower:angular-datatables:0.5.0'
+			compile 'org.webjars:angles:279f5f7'
+			compile 'org.webjars:font-awesome:4.4.0'
+			compile 'org.webjars:datatables:1.10.9'
+			compile 'org.webjars:sweetalert:0.4.1'
+			compile 'org.webjars.bower:angular-slick-carousel:3.0.10'
+			compile 'org.webjars.bower:iCheck:1.0.2'
+			compile 'org.webjars:chartjs:26962ce-1'
+			compile 'org.webjars:angles:279f5f7'
+			compile 'org.webjars:jquery.sparkline:2.1.2'		
+			compile "org.webjars.bower:angular-ui-select:0.13.2"
+			compile "org.webjars.bower:angular-ui-mask:1.2.0"
+			compile "org.webjars.bower:slimScroll:1.3.3"
+			compile "org.webjars.bower:pace:1.0.2"
+			compile "org.webjars.bower:metisMenu:2.1.0"
+			compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.3'
+			compile 'org.webjars.bower:bootstrap:4.0.0-alpha.3'
+			compile 'org.webjars.bower:angular-treasure-overlay-spinner:1.1.0'
+			
+    	}
+
+	    gretty {
+	    	contextPath = '/'
+	  		httpsEnabled=true
+	  		webappCopy {
+	  			filter(ReplaceTokens, tokens: ['profile': profile])
+	  			filter(ReplaceTokens, tokens: ['cssfile': cssfile])
+	  			filter(ReplaceTokens, tokens: ['jsfile': jsfile])
+	  		}
+		}
+		
+		println "profile >>> :  $profile"
+		war {
+		  filter(ReplaceTokens, tokens: ['profile': profile])
+		  filter(ReplaceTokens, tokens: ['cssfile': cssfile])
+	  	  filter(ReplaceTokens, tokens: ['jsfile': jsfile])
+		}
+		
+		// Create new CombineJsTasks if you have multiple sets of JS files
+	task jsDev(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+ 	   source = ["${projectDir}/js/file1.js", "${projectDir}/js/file2.js"]
+   		 dest = file("${buildDir}/all-debug.js")
+	}
+	
 }
 

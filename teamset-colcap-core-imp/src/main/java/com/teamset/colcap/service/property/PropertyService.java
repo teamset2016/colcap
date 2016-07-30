@@ -10,5 +10,8 @@ public interface PropertyService {
 	Property get(String propCode);
 
 	List<Property> getPropertyList(Set<String> propCodeSet);
+	
+	List<Property> findAll();
+
 
 }

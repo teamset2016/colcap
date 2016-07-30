@@ -2,54 +2,53 @@ package com.teamset.colcap.domain.entity.rule;
 
 public enum Operator {
 
-	EQ("EQ"),
+	EQ("EQ", "Equal"),
 
-	NE("NE"),
+	NE("NE", "Not Equal"),
 
-	GT("GT"),
+	GT("GT", "Greater Than"),
 
-	GE("GE"),
+	GE("GE", "Greater Equal"),
 
-	LT("LT"),
+	LT("LT", "Less Than"),
+	
+	BT("BT", "Between"),
 
-	LE("LE"),
-
-	BT("BT");
+	LE("LE", "Less Than Equal");
 
 	private String operator;
 
-	private Operator(String operator) {
+	private String desc;
+
+	private Operator(String operator, String desc) {
 		this.operator = operator;
+		this.desc = desc;
 	}
 
 	public String getOperator() {
 		return operator;
 	}
-
-	public <T extends Comparable<T>> boolean evaluate(T val, T targetVal) {
-		if (this == GT) {
-			return val.compareTo(targetVal) > 0;
-		} else if (this == GE) {
-			return val.compareTo(targetVal) >= 0;
-		} else if (this == LT) {
-			return val.compareTo(targetVal) < 0;
-		} else if (this == LE) {
-			return val.compareTo(targetVal) <= 0;
-		} else if (this == EQ) {
-			return val.compareTo(targetVal) == 0;
-		} else if (this == NE) {
-			return val.compareTo(targetVal) != 0;
-		}
-
-		return false;
+	
+	public String getDesc() {
+		return desc;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Comparable<T>> boolean evaluate(T val, T fromVal, T toVal) {
-		if (this == BT) {
-			return val.compareTo(fromVal) >= 0 && val.compareTo(toVal) <= 0;
+	public <T extends Comparable<T>> boolean evaluate(Comparable<T> value1,
+			Comparable<T> value2) {
+		if (this == GT) {
+			return value1.compareTo((T) value2) == 0;
+		} else if (this == GE) {
+			return value1.compareTo((T) value2) >= 0;
+		} else if (this == LT) {
+			return value1.compareTo((T) value2) < 0;
+		} else if (this == LE) {
+			return value1.compareTo((T) value2) <= 0;
+		} else if (this == EQ) {
+			return value1.compareTo((T) value2) == 0;
+		} else if (this == NE) {
+			return value1.compareTo((T) value2) != 0;
 		}
-
 		return false;
 	}
 

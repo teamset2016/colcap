@@ -1,0 +1,34 @@
+<!-- Wrapper-->
+<div id="wrapper">
+    <!-- header -->
+    <header>
+        <div ng-include="'/app/common/header.html'"></div>
+    </header>
+    <!-- Page wraper -->
+    <main>
+        <div id="page-wrapper"  class="clearfix {{$state.current.name}}">
+  <div id="page-title-wrapper">
+            <ul  class="list-inline">
+               <li>   
+                <h2 class="page-title">{{$state.current.data.pageTitle}}</h2>
+            </li>   
+            <li class="pull-right">
+             <div ncy-breadcrumb> </div>
+            </li>
+        </ul>
+    </div>
+        <div id="content" class="animated fadeIn">
+           <!-- Main view  -->
+           <div ui-view></div>
+       </div>
+   </main>	
+   <!-- End page wrapper-->
+
+
+
+   <!-- Footer -->
+   <footer>
+  
+</footer>
+</div>
+<!-- End wrapper-->

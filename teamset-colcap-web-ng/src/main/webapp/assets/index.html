@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html ng-app="b2b">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Page title set in pageTitle directive -->
+    <title page-title></title>
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css --
+    <!-- Font awesome -->
+    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="bower_components/slick-carousel/slick/slick.css" rel="stylesheet">
+    <link href="bower_components/slick-carousel/slick/slick-theme.css" rel="stylesheet">
+    <link href="bower_components/sweetalert/lib/sweet-alert.css" rel="stylesheet">
+    <link href="bower_components/ui-select/dist/select.min.css" rel="stylesheet">
+    <link href="bower_components/datatables/media/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/angular-datatables/dist/datatables.bootstrap.min.css" rel="stylesheet">
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css({.tmp,app}) styles/style.css -->
+    <link href="styles/ifast-post-sg.css" rel="stylesheet">
+    <!-- endbuild -->
+
+
+</head>
+
+<!-- ControllerAs syntax -->
+<body ng-controller="MainCtrl as main">
+
+<!-- Main view  -->
+<div ui-view></div>
+
+
+<!-- build:js(.) scripts/vendor.js -->
+
+<!-- jQuery and Bootstrap -->
+
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+
+<!-- SlimScroll -->
+<script src="bower_components/slimScroll/jquery.slimscroll.min.js"></script>
+
+<!-- Peace JS -->
+<script src="bower_components/PACE/pace.min.js"></script>
+
+<!-- MetsiMenu -->
+<script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>    
+
+<!-- Angular scripts-->
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-breadcrumb/dist/angular-breadcrumb.min.js"></script>
+<script src="bower_components/ui-select/dist/select.min.js"></script>
+<script src="bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
+<script src="bower_components/slick-carousel/slick/slick.js"></script>
+<script src="bower_components/angular-slick-carousel/dist/angular-slick.min.js"></script>
+<script src="bower_components/angles/angles.js"></script>
+<script src="bower_components/chartjs/Chart.min.js"></script>
+<script src="bower_components/jquery.sparkline/index.js"></script>
+<script src="bower_components/sweetalert/lib/sweet-alert.min.js"></script>
+<script src="bower_components/iCheck/icheck.min.js"></script>
+<script src="bower_components/angular-ui-mask/dist/mask.js"></script>
+
+
+
+<!-- Angular Dependiences -->
+<!--                      -->
+<!--                      -->
+<!--                      -->
+
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<!-- Custom and plugin javascript -->
+<script src="scripts/b2b.js"></script>
+
+<!-- Angular App Script -->
+<script src="scripts/app.js"></script>
+<script src="scripts/config.js"></script>
+<script src="scripts/directives.js"></script>
+<script src="scripts/controllers.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

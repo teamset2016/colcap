@@ -28,4 +28,10 @@ public class PropertyServiceImpl implements PropertyService {
 	public List<Property> getPropertyList(Set<String> propCodeSet) {
 		return propertyDao.getPropertyList(propCodeSet);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Property> findAll() {
+		return propertyDao.findAll();
+	}
 }

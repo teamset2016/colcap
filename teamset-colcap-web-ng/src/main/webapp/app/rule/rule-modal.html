@@ -1,0 +1,129 @@
+<div>
+<div class="inmodal">
+	<form name="addRulesForm">
+		<div class="modal-header text-center">
+		<h5>Add Rule</h5>
+		</div>
+		<div class="modal-body">
+			<div>
+			  <div class="form-group required row">
+  				  <label class="control-label col-xl-4">Rule Id</label>
+  				  <div class="col-xl-8">
+  				   	 <input class="form-control" type="text" ng-model="ruleModalCtrl.rule.id" name="id" required>
+  				  </div>
+			  </div>	
+			  <div class="form-group row">
+  				  <label class="control-label col-xl-4">For Collateral Type</label>
+  				  <div class="col-xl-8">
+  				   	 <input class="form-control" type="text" value="" ng-model="ruleModalCtrl.rule.collateralType"  name="collateralType" >
+  				  </div>
+			  </div>	
+			  <div class="form-group row">
+  				  <label class="control-label col-xl-4">Rule Description</label>
+  				  <div class="col-xl-8">
+  				   	 <input class="form-control" type="text" value="" ng-model="ruleModalCtrl.rule.description"  name="description" >
+  				  </div>
+			  </div>	
+			  <div class="form-group row">
+  				  <label class="control-label col-xl-4">Tier</label>
+  				  <div class="col-xl-8">
+  				   	 <input class="form-control" type="text" value="" ng-model="ruleModalCtrl.rule.tier"  name="tier" required>
+  				  </div>
+			  </div>
+			   <div class="form-group row">
+  				  <label class="control-label col-xl-4">Hair Cut value if eligible</label>
+  				  <div class="col-xl-8">
+  				   	 <input class="form-control" type="text" value="" ng-model="ruleModalCtrl.rule.hairCutPercentage"  name="hairCutPercentage" required>
+  				  </div>
+			  </div>	
+			  <div class="form-group row">
+				    <div class="col-xl-4">
+				    <button class="btn btn-primary" ng-click="ruleModalCtrl.addCriteria()">Click to add(+) eligible criteria for this rule</button>
+				    </div>
+  				  <label class="control-label col-xl-4">At least one(1) eligible criteria is needed </label>
+  			  </div>
+  			  <div class="card card-block" ng-show="ruleModalCtrl.rule.ruleCriterias.length > 0">
+  			      <div class="card-title"><h5>Eligible Criteria
+  			      </h5>
+  				  </div>
+  			  <div class="form-group required  row" ng-repeat="rule in ruleModalCtrl.rule.ruleCriterias" >
+  				  <label class="control-label col-xl-2">Criteria {{($index + 1)}}</label>
+  				   <div class="col-xl-2">
+  				   <ui-select ng-model="ruleModalCtrl.rule.ruleCriterias[$index].propField " required>
+				    <ui-select-match placeholder="Select Criteria">{{$select.selected.propDesc}}</ui-select-match>
+				    <ui-select-choices repeat="opr.propField as opr in ruleModalCtrl.criterias | filter : $select.search ">
+				      <div ng-bind="opr.propDesc"></div>
+				    </ui-select-choices>
+				  </ui-select>
+				  </div>
+  				 <div class="col-xl-2">
+  				   <ui-select ng-model="ruleModalCtrl.rule.ruleCriterias[$index].operator " required>
+				    <ui-select-match placeholder="Select Operator">{{$select.selected.desc}}</ui-select-match>
+				    <ui-select-choices repeat="opr.code as opr in ruleModalCtrl.operators | filter : $select.search ">
+				      <div ng-bind="opr.desc"></div>
+				    </ui-select-choices>
+				  </ui-select>
+  				  </div>
+  				  <div class="col-xl-2">
+  				   	 <input class="form-control " type="text" required value="" ng-model="ruleModalCtrl.rule.ruleCriterias[$index].value1"  name="criteria{{$index}}" >
+  				  </div>
+  				   <div class="col-xl-1" ng-if="ruleModalCtrl.rule.ruleCriterias[$index].operator == 'BT')">
+				And  				  </div>	
+  				  <div class="col-xl-2" ng-if="ruleModalCtrl.rule.ruleCriterias[$index].operator == 'BT'">
+  				   	 <input class="form-control" type="text" required ng-model="ruleModalCtrl.rule.ruleCriterias[$index].value2"  name="description" >
+  				  </div>
+  				   <div class="col-xl-2">
+				    <button class="btn btn-danger btn-sm" ng-click="ruleModalCtrl.deleteCriteria()">Remove this Criteria</button>
+  				  </div>
+			  </div>	
+			  </div>	
+			  <div class="form-group row">
+				    <div class="col-xl-4">
+				    <button class="btn btn-primary" ng-click="ruleModalCtrl.addHairCutCriteria()">Click to add(+) haircut reduction criteria for this rule</button>
+				    </div>
+  			  </div>
+  			  <div class="card card-block" ng-show="ruleModalCtrl.rule.hairCutRuleCriterias.length > 0">
+  			      <div class="card-title">	<h5>Hair Cut Reduction Criteria</h5>
+  				  </div>
+  			  <div class="form-group required  row" ng-repeat="rule in ruleModalCtrl.rule.hairCutRuleCriterias" >
+  				  <label class="control-label col-xl-2">Criteria {{($index + 1)}}</label>
+  				     <div class="col-xl-2">
+  				   <ui-select ng-model="ruleModalCtrl.rule.hairCutRuleCriterias[$index].propField " required>
+				    <ui-select-match placeholder="Select Criteria">{{$select.selected.propDesc}}</ui-select-match>
+				    <ui-select-choices repeat="opr.propField as opr in ruleModalCtrl.criterias | filter : $select.search ">
+				      <div ng-bind="opr.propDesc"></div>
+				    </ui-select-choices>
+				  </ui-select>
+				  </div>
+  				 <div class="col-xl-2">
+  				   <ui-select ng-model="ruleModalCtrl.rule.hairCutRuleCriterias[$index].operator " >
+    <ui-select-match placeholder="Select Operator">{{$select.selected.desc}}</ui-select-match>
+    <ui-select-choices repeat="opr.code as opr in ruleModalCtrl.getOperator(ruleModalCtrl.rule.hairCutRuleCriterias[$index].propField) | filter : $select.search ">
+      <div ng-bind="opr.desc"></div>
+    </ui-select-choices>
+  </ui-select>
+  				  </div>
+  				  <div class="col-xl-2">
+  				   	 <input class="form-control" type="text" required ng-model="ruleModalCtrl.rule.hairCutRuleCriterias[$index].value1"  name="hair_cut_criteria_{{$index}}" >
+  				  </div>
+  				  
+  				   <div class="col-xl-1" ng-if="ruleModalCtrl.rule.hairCutRuleCriterias[$index].operator == 'BT'" >
+				And  				  </div>	
+  				  <div class="col-xl-2" ng-if="ruleModalCtrl.rule.hairCutRuleCriterias[$index].operator == 'BT'">
+  				   	 <input class="form-control" type="text" required  ng-mode-l="ruleModalCtrl.rule.hairCutRuleCriterias[$index].value2"  name="description" >
+  				  </div>
+  				   <div class="col-xl-2">
+				    <button class="btn btn-danger btn-sm" ng-click="ruleModalCtrl.removeHairCutCriteria()">Remove this Criteria</button>
+  				  </div>
+			  </div>	
+			  </div>
+			</div>
+		</div>
+		
+	</form>
+			<div class="modal-footer">
+				<button class="btn btn-primary " ng-disabled="addRulesForm.$invalid || ruleModalCtrl.rule.ruleCriterias.length <=0">Save</button>
+			</div>
+	
+</div>
+</div>

@@ -1,0 +1,38 @@
+<weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd 
+	http://xmlns.oracle.com/weblogic/weblogic-web-app 
+	http://xmlns.oracle.com/weblogic/weblogic-web-app/1.4/weblogic-web-app.xsd">
+
+	<resource-description>
+		<res-ref-name>jdbc/oraclePool</res-ref-name>
+		<jndi-name>${fsm.dataSource}</jndi-name>
+	</resource-description>
+
+	<container-descriptor>
+		<prefer-application-packages>
+			<package-name>javax.persistence.*</package-name>
+			<package-name>com.google.common.*</package-name>
+			<package-name>org.slf4j.*</package-name>
+			<package-name>org.apache.*</package-name>
+			<package-name>javax.wsdl.*</package-name>
+		    <package-name>org.springframework.*</package-name>
+		    <package-name>org.hibernate.*</package-name>
+		    <package-name>javassist.*</package-name>
+		</prefer-application-packages>
+
+		<prefer-application-resources>
+			<resource-name>org.springframework.*</resource-name>
+		    <resource-name>javax.persistence.*</resource-name>
+		    <resource-name>javax.validation.*</resource-name>
+		    <resource-name>org.hibernate.*</resource-name>
+		    <resource-name>javassist.*</resource-name>
+		</prefer-application-resources>
+		
+		 <show-archived-real-path-enabled>true</show-archived-real-path-enabled>
+	</container-descriptor>
+	
+	<context-root>fsm2</context-root>
+</weblogic-web-app>
+

@@ -27,4 +27,22 @@ public class RuleServiceImpl implements RuleService {
 	public List<Rule> findRule(Long acctId) {
 		return ruleDao.findRule(acctId);
 	}
+
+	@Override
+	public void delete(Rule rule) {
+		ruleDao.delete(rule);
+
+	}
+
+	@Override
+	public void update(Rule rule) {
+		ruleDao.update(rule);
+
+	}
+
+	@Override
+	public void add(Rule rule) {
+		ruleDao.add(rule);
+		
+	}
 }

@@ -1,0 +1,5 @@
+#org.springsource.ide.eclipse.gradle.core.preferences.GradleProjectPreferences
+#Sat Jul 30 05:36:17 SGT 2016
+build.family.org.gradle.tooling.model.eclipse.HierarchicalEclipseProject=;teamset-colcap-core;teamset-colcap-core-imp;teamset-colcap-domain;teamset-colcap-persistence;teamset-colcap-web-ng;
+org.springsource.ide.eclipse.gradle.linkedresources=
+org.springsource.ide.eclipse.gradle.rootprojectloc=
